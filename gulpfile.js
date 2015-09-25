@@ -15,6 +15,7 @@ var config = {
     paths: {
         html: './src/*.html', // go into the src directory and match any html files
         js: './src/**/*.js', // look for any js we can find, including in subdirectories
+        images: './src/images/*',
         css: [
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
             'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
@@ -61,6 +62,15 @@ gulp.task('css', function () { // css task that looks for our css paths, concate
        .pipe(gulp.dest(config.paths.dist + '/css'));
 });
 
+// Migrates images to dist folder
+// Note that I could even optimize my images here
+gulp.task('images', function () {
+    gulp.src(config.paths.images)
+        .pipe(gulp.dest(config.paths.dist + '/images'))
+        .pipe(connect.reload());
+});
+
+
 gulp.task('lint', function () { // return the results so we see the output of our linting
     return gulp.src(config.paths.js) // we're looking at js files
         .pipe(lint({config: 'eslint.config.json'})) // configuration file of linting rules
@@ -70,6 +80,6 @@ gulp.task('lint', function () { // return the results so we see the output of ou
 gulp.task('watch', function () {
     gulp.watch(config.paths.html, ['html']); // watch the html path and anytime something changes in there run the html task
     gulp.watch(config.paths.js, ['js', 'lint']); // watch the js path and anytime js changes run the js and linting tasks
-})
+});
 
-gulp.task('default', ['html', 'js', 'css', 'lint', 'open', 'watch']); // if I just type gulp it's going to run the html task and then the open and watch tasks
+gulp.task('default', ['html', 'js', 'css', 'images', 'lint', 'open', 'watch']); // if I just type gulp it's going to run the html task and then the open and watch tasks
